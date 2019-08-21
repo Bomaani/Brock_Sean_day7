@@ -38,6 +38,9 @@ const shoppingList = (function(){
   function render() {
     // Filter item list if store prop is true by item.checked === false
     let items = [ ...store.items ];
+
+    if(store.sortBy)
+
     if (store.hideCheckedItems) {
       items = items.filter(item => !item.checked);
     }
@@ -121,6 +124,25 @@ const shoppingList = (function(){
     });
   }
   
+  // Places an event listener on the search form to filter the item list
+  function handleSearchSubmit() {
+    $('#js-search-term-form').on('submit', event => {
+      event.preventDefault();
+      const searchTerm = $('.js-search-term').val();
+      setSearchTerm(searchTerm);
+      render();
+    });
+  }
+  
+  // Places an event listener on the search term clear button to clear the input
+  function handleSearchClear() {
+    $('#search-form-clear').on('click', () => {
+      setSearchTerm('');
+      render();
+    });
+  }
+
+
   function handleEditShoppingItemSubmit() {
     $('.js-shopping-list').on('submit', '.js-edit-item', event => {
       event.preventDefault();
@@ -153,6 +175,8 @@ const shoppingList = (function(){
     handleEditShoppingItemSubmit();
     handleToggleFilterClick();
     handleShoppingListSearch();
+    handleSearchSubmit();
+    handleSearchClear();
   }
 
   // This object contains the only exposed methods from this module:
